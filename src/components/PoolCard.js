@@ -5,6 +5,7 @@ import { abi as STAKING_REWARDS_ABI } from '../artifacts/UnipoolVested.json'
 import { abi as UNI_ABI } from '../artifacts/UNI.json'
 import { humanRedeableAmout } from '../lib/web3-utils'
 import { usePoolCardInfo } from '../hooks/usePoolCardInfo'
+import APRDetails from './APRDetails'
 
 function PoolCard({ provider, name, poolAddress, owner, logo }) {
   const [poolState, setPoolState] = useState('default')
@@ -163,12 +164,15 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
       <h2>50% DN 50% ETH</h2>{' '}
       <SimpleButton onClick={deposit}>Add more</SimpleButton>
     </SpaceBetween>
+    <SpaceBetween>
     <h2>
       <b>APR:</b>{' '}
       {stakePoolInfo.APR && (
-        <div className="pool-info-text">{stakePoolInfo.APR}%</div>
+        <span className="pool-info-text">{stakePoolInfo.APR}%</span>
       )}
     </h2>
+    <APRDetails />
+    </SpaceBetween>
     <SpaceBetween>
       <h2>
         <b>LP token:</b>{' '}

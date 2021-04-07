@@ -5,11 +5,12 @@ import Seed from '../assets/seed.js'
 import Time from '../assets/time.js'
 
 function Rewards({ wallet, network, onboard }) {
+  console.log("asset", wallet)
   if (!wallet.provider) {
     return (
       <WarnSection>
         <div>
-          <WarnMessage> Please connect to a wallet</WarnMessage>
+          <WarnMessage className="margin-bottom"> Please connect to a wallet</WarnMessage>
           <GreenButton
             onClick={() => {
               onboard.walletSelect()
@@ -248,6 +249,9 @@ const WarnMessage = styled.div`
   text-align: center;
   color: #5c706f;
   margin: auto;
+  &.margin-bottom{
+    margin-bottom: 20px;
+  }
 `
 const WarnSection = styled.section`
   background-color: white;

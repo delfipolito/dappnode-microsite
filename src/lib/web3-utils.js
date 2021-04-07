@@ -79,11 +79,11 @@ export function networkAllowed(chainId) {
 
 export function isMainnet(chainId) {
   chainId = String(chainId)
-  return (chainId === '100')
+  return (chainId === '1')
 }
 
 //TODO: Change networtk
 export function isDN(chainId) {
   chainId = String(chainId)
-  return (chainId === '1')
+  return (chainId === '100')
 }
