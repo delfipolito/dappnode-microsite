@@ -31,3 +31,8 @@
 body {
   font-family: 'Inter';
 }
+
+a, a span, button {
+  outline: none;
+  transition: all 0.25s ease-in-out;
+}

@@ -1,14 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
 import PoolCard from './PoolCard'
+import Rewards from './Rewards'
 import dn from '../assets/dn-logo.svg'
+import pools from '../assets/Pools.svg'
+import tokens from '../assets/Tokens.svg'
 import dnEth from '../assets/dn-eth-logos.svg'
+import { networkAllowed } from '../lib/web3-utils'
 
-const Dashboard = ({ provider, address }) => (
+const Dashboard = ({ provider, address, network, wallet, onboard }) => (
   <DashboardSection>
+    <h1>
+      <img src={tokens} />
+      My tokens
+    </h1>
+    <PoolsContainer>
+      <Rewards wallet={wallet} network={network} onboard={onboard} />
+    </PoolsContainer>
+    <br/>
+    <h1>
+      <img src={pools} />
+      Staking Pools
+    </h1>
     <PoolsContainer>
       {provider &&
-        address && (
+        address &&
+        networkAllowed(network) && (
           <>
             <PoolCard
               provider={provider}
@@ -40,8 +57,22 @@ const Dashboard = ({ provider, address }) => (
 const DashboardSection = styled.section`
   height: 100%;
   width: 80%;
+  max-width: 940px;
   margin: auto;
   padding: 100px;
+  h1 {
+    font-family: 'Inter-Bold';
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    color: #455453;
+    margin: 20px 10px;
+    img {
+      padding-right: 5px;
+    }
+  }
 `
 
 const PoolsContainer = styled.div`

@@ -1,37 +1,60 @@
 import React from 'react'
 import styled from 'styled-components'
-import logo from '../assets/DAppNodeDAO-logo.svg'
+import logo from '../assets/mini-logo.svg'
 import { shortenAddress, getNetworkType } from '../lib/web3-utils'
+import { networkAllowed } from '../lib/web3-utils'
 
-const Navbar = ({ address, ethBalance, network }) => (
+const Navbar = ({ address, ethBalance, network, wallet, onboard }) => (
   <NavbarSection>
+    {networkAllowed(network) && <ConnectedLine />}
     <Container>
-      <img src={logo} alt="logo" />
+      <h1>
+        <img src={logo} alt="logo" />
+        DAppNode Dashboard
+      </h1>
       <div>
-        {address && <p>{shortenAddress(address)}</p>}
-        {ethBalance != null && (
-          <p>
+        {!wallet.provider && (
+          <ConnectWallet
+            onClick={() => {
+              onboard.walletSelect()
+            }}
+          >
+            Connect Wallet
+          </ConnectWallet>
+        )}
+        {network && <Button>Network: {getNetworkType(network)} </Button>}
+        {address && (
+          <WhiteButton onClick={onboard.walletSelect}>
+            {address && <p>{shortenAddress(address)}</p>}
+          </WhiteButton>
+        )}
+        {ethBalance && (
+          <WhiteButton>
             {Number(ethBalance) > 0
               ? ethBalance / 1000000000000000000
               : ethBalance}{' '}
-            ETH
-          </p>
+            <span> ETH</span>
+          </WhiteButton>
         )}
-        {network && <Button>{getNetworkType(network)} network</Button>}
       </div>
     </Container>
   </NavbarSection>
 )
 
+const ConnectedLine = styled.div`
+  background: #54d4cb;
+  box-shadow: 0px 0px 12px #54d4cb;
+  width: 100%;
+  height: 4px;
+`
+
 const NavbarSection = styled.section`
-  background-color: white;
-  height: 60px;
+  background-color: transparent;
+  height: 72px;
   text-align: center;
   overflow: hidden;
-  border: solid 1px #e7e7e7;
   position: relative;
   z-index: 1;
-  box-shadow: 0px 10px 18px 7px rgb(73 66 67 / 41%);
 }
 
 
@@ -45,6 +68,18 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  h1 {
+    font-family: 'Inter';
+    font-weight: 500;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.2px;
+    color: #35403f;
+    img {
+      padding-right: 22px;
+    }
+  }
   div {
     display: flex;
     align-items: center;
@@ -62,17 +97,56 @@ const Container = styled.div`
 `
 
 const Button = styled.a`
-  color: #2fbcb2;
-  font-family: 'Interstate', 'Inter-Bold', sans-serif;
-  font-size: 13px;
-  font-weight: bold;
-  letter-spacing: 0.22px;
-  line-height: 15px;
+  background: #c4f3ef;
+  border-radius: 8px;
   text-transform: uppercase;
-  border: 2px solid #2fbcb2;
-  border-radius: 38px;
-  padding: 10px 20px;
+  border: 0px solid transparent;
+  padding: 8px 10px;
+  font-family: 'Inter-Bold', sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: right;
+  color: #144b52;
   margin-left: 15px;
+`
+
+const WhiteButton = styled.div`
+  background: white;
+  border-radius: 8px;
+  text-transform: uppercase;
+  border: 0px solid transparent;
+  padding: 8px 10px;
+  font-family: 'Inter-Bold', sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: right;
+  color: #455453;
+  margin-left: 15px;
+  span {
+    color: #455453c7;
+    padding-left: 3px;
+  }
+`
+
+const ConnectWallet = styled.button`
+  background: #ffffff;
+  border: solid 0px transparent;
+  border-radius: 27px;
+  font-family: 'Inter-Bold';
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: #23c8bc;
+  padding: 8px 16px;
+  box-shadow: 0px 1px 1px rgba(8, 43, 41, 0.08), 0px 0px 8px rgba(8, 43, 41, 0.06);
+  &:hover {
+    background: #c4f3ef;
+    color: #144b52;
+    transition: all 0.25s ease-in-out;
+  }
 `
 
 export default Navbar

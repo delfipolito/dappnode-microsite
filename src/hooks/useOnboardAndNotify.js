@@ -20,7 +20,6 @@ export function useOnboardAndNotify() {
           network: setNetwork,
           balance: setBalance,
           wallet: wallet => {
-            console.log('wallet', wallet)
             if (wallet.provider) {
               setWallet(wallet)
               const ethersProvider = new ethers.providers.Web3Provider(

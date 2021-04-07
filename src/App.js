@@ -5,7 +5,6 @@ import Dashboard from './components/Dashboard'
 import './App.css'
 import { useOnboardAndNotify } from './hooks/useOnboardAndNotify'
 
-
 function App() {
   const {
     address,
@@ -14,64 +13,25 @@ function App() {
     wallet,
     onboard,
     notify,
-    provider
+    provider,
   } = useOnboardAndNotify()
 
   return onboard && notify ? (
     <Main>
-      <Navbar address={address} ethBalance={balance} network={network} />
-      <Dashboard provider={provider} address={address} />
-      <section className="main">
-        <div className="container">
-          <h2>Onboarding Users with Onboard.js</h2>
-          <div>
-            {!wallet.provider && (
-              <button
-                className="bn-demo-button"
-                onClick={() => {
-                  onboard.walletSelect()
-                }}
-              >
-                Select a Wallet
-              </button>
-            )}
-
-            {wallet.provider && (
-              <button className="bn-demo-button" onClick={onboard.walletCheck}>
-                Wallet Checks
-              </button>
-            )}
-
-            {wallet.provider && (
-              <button className="bn-demo-button" onClick={onboard.walletSelect}>
-                Switch Wallets
-              </button>
-            )}
-
-            {wallet.provider && (
-              <button className="bn-demo-button" onClick={onboard.walletReset}>
-                Reset Wallet State
-              </button>
-            )}
-            {wallet.provider &&
-              wallet.dashboard && (
-                <button className="bn-demo-button" onClick={wallet.dashboard}>
-                  Open Wallet Dashboard
-                </button>
-              )}
-            {wallet.provider &&
-              wallet.type === 'hardware' &&
-              address && (
-                <button
-                  className="bn-demo-button"
-                  onClick={onboard.accountSelect}
-                >
-                  Switch Account
-                </button>
-              )}
-          </div>
-        </div>
-      </section>
+      <Navbar
+        wallet={wallet}
+        onboard={onboard}
+        address={address}
+        ethBalance={balance}
+        network={network}
+      />
+      <Dashboard
+        wallet={wallet}
+        provider={provider}
+        address={address}
+        onboard={onboard}
+        network={network}
+      />
     </Main>
   ) : (
     <div>Loading...</div>
@@ -79,7 +39,8 @@ function App() {
 }
 
 const Main = styled.main`
-  background: #f1f2f4;
+  background: linear-gradient(116.82deg, #c7eeec 0%, #f4f6f6 100%);
+  min-height: 100vh;
 `
 
 export default App

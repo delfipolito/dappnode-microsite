@@ -55,7 +55,7 @@ export function shortenAddress(address, charsLength = 4) {
   )
 }
 
-
+//TODO: Add DN network id
 export function getNetworkType(chainId) {
   chainId = String(chainId)
 
@@ -64,7 +64,26 @@ export function getNetworkType(chainId) {
   if (chainId === '4') return 'rinkeby'
   if (chainId === '5') return 'goerli'
   if (chainId === '42') return 'kovan'
+  if (chainId === '100') return 'xDAI'
   if (chainId === 'localhost') return 'localhost'
 
   return DEFAULT_LOCAL_CHAIN
+}
+
+
+//TODO: Add DN network id
+export function networkAllowed(chainId) {
+  chainId = String(chainId)
+  return (chainId === '100')
+}
+
+export function isMainnet(chainId) {
+  chainId = String(chainId)
+  return (chainId === '100')
+}
+
+//TODO: Change networtk
+export function isDN(chainId) {
+  chainId = String(chainId)
+  return (chainId === '1')
 }

@@ -15,190 +15,6 @@ function PoolCard({ provider, name, poolAddress, owner, logo }) {
     userStakeInfo,
   } = usePoolCardInfo(name, poolAddress, owner, provider)
 
-  console.log("pool", name, cardStatus,
-  stakePoolInfo,
-  contracts,
-  userStakeInfo);
-  // const [cardStatus, setCardStatus] = useState({
-  //   tick: false,
-  //   amount: '0',
-  //   depositButton: 'Deposit',
-  //   withdrawButton: 'Withdraw',
-  //   claimButton: 'Claim',
-  //   buttonsEnable: true,
-  // })
-  // const [stakePoolInfo, setStakePoolInfo] = useState({})
-  // const [contracts, setContracts] = useState({})
-  // const [userStakeInfo, setUserStakeInfo] = useState({})
-  //
-  // async function updateStatus() {
-  //   if (
-  //     !contracts.stackingRewardsContract ||
-  //     !contracts.stackingRewardsContract ||
-  //     !contracts.tokenPoolContract
-  //   )
-  //     return
-  //
-  //   let uniLPShares = await contracts.stackingRewardsContract.balanceOf(owner)
-  //   let earned = await contracts.stackingRewardsContract.earned(owner)
-  //   let availableUniLPShares = await contracts.tokenPoolContract.balanceOf(
-  //     owner
-  //   )
-  //   let _rewardRate = await contracts.stackingRewardsContract.rewardRate()
-  //   let _totalSupply = await contracts.stackingRewardsContract.totalSupply()
-  //
-  //   let _APR = new ethers.utils.BigNumber('0')
-  //   let _LP_CAR = new ethers.utils.BigNumber('0')
-  //
-  //   if (_totalSupply > 0 && name !== 'CAR') {
-  //     let _totalSupplyPool = await contracts.tokenPoolContract.totalSupply()
-  //     let [
-  //       _reserve0,
-  //       _reserve1,
-  //     ] = await contracts.tokenPoolContract.getReserves()
-  //
-  //     let _token0 = await contracts.tokenPoolContract.token0()
-  //     let tkn0 = new Contract(_token0, UNI_ABI, provider)
-  //     let _tokenName0 = await tkn0.symbol()
-  //
-  //     let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
-  //     _LP_CAR = _totalSupplyPool
-  //       .mul(new ethers.utils.BigNumber('1000000000000000000'))
-  //       .div(new ethers.utils.BigNumber(2))
-  //       .div(_reserve)
-  //
-  //     _APR = _rewardRate
-  //       .mul(new ethers.utils.BigNumber('31536000'))
-  //       .mul(new ethers.utils.BigNumber('100'))
-  //       .div(_totalSupply)
-  //       .mul(_LP_CAR)
-  //       .div(new ethers.utils.BigNumber('1000000000000000000'))
-  //   } else if (name === 'CAR') {
-  //     _APR = _rewardRate
-  //       .mul(new ethers.utils.BigNumber('100'))
-  //       .mul(new ethers.utils.BigNumber('31536000'))
-  //       .div(_totalSupply)
-  //   }
-  //
-  //   setStakePoolInfo({
-  //     ...stakePoolInfo,
-  //     periodFinish: new Date(
-  //       (await contracts.stackingRewardsContract.periodFinish()) * 1000
-  //     ).toISOString(),
-  //     totalSupply: humanRedeableAmout(_totalSupply),
-  //     rewardRate: humanRedeableAmout(_rewardRate),
-  //     rewardPerToken: humanRedeableAmout(
-  //       await contracts.stackingRewardsContract.rewardPerToken()
-  //     ),
-  //     APR: _APR.toString(),
-  //   })
-  //
-  //   setUserStakeInfo({
-  //     staked: humanRedeableAmout(uniLPShares),
-  //     available: humanRedeableAmout(availableUniLPShares),
-  //     earned: humanRedeableAmout(earned),
-  //   })
-  //
-  //   setCardStatus({
-  //     ...cardStatus,
-  //     tick: true,
-  //   })
-  //
-  //   setTimeout(hideBlockTick, 300)
-  // }
-  //
-  // useEffect(() => {
-  //   if (
-  //     provider &&
-  //     (!contracts.stackingRewardsContract ||
-  //       !contracts.stackingRewardsContract ||
-  //       !contracts.tokenPoolContract)
-  //   ) {
-  //     intialize()
-  //   } else {
-  //     updateStatus()
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   //}, [block]);
-  // })
-  //
-  // async function intialize() {
-  //   let src = new Contract(address, STAKING_REWARDS_ABI, provider)
-  //   let spt = await src.uni()
-  //   let tpc = new Contract(spt, UNI_ABI, provider)
-  //
-  //   let uniLPShares = await src.balanceOf(owner)
-  //   let earned = await src.earned(owner)
-  //   let availableUniLPShares = await tpc.balanceOf(owner)
-  //   let _rewardRate = await src.rewardRate()
-  //   let _totalSupply = await src.totalSupply()
-  //
-  //   let _APR = new ethers.utils.BigNumber('0')
-  //   let _LP_CAR = new ethers.utils.BigNumber('0')
-  //
-  //   if (_totalSupply > 0 && name !== 'CAR') {
-  //     let _totalSupplyPool = await tpc.totalSupply()
-  //     let [_reserve0, _reserve1] = await tpc.getReserves()
-  //
-  //     let _token0 = await tpc.token0()
-  //     let tkn0 = new Contract(_token0, UNI_ABI, provider)
-  //     let _tokenName0 = await tkn0.symbol()
-  //
-  //     let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
-  //     _LP_CAR = _totalSupplyPool
-  //       .mul(new ethers.utils.BigNumber('1000000000000000000'))
-  //       .div(new ethers.utils.BigNumber(2))
-  //       .div(_reserve)
-  //
-  //     _APR = _rewardRate
-  //       .mul(new ethers.utils.BigNumber('31536000'))
-  //       .mul(new ethers.utils.BigNumber('100'))
-  //       .div(_totalSupply)
-  //       .mul(_LP_CAR)
-  //       .div(new ethers.utils.BigNumber('1000000000000000000'))
-  //   } else if (name === 'CAR') {
-  //     _APR = _rewardRate
-  //       .mul(new ethers.utils.BigNumber('100'))
-  //       .mul(new ethers.utils.BigNumber('31536000'))
-  //       .div(_totalSupply)
-  //   }
-  //
-  //   setUserStakeInfo({
-  //     staked: humanRedeableAmout(uniLPShares),
-  //     available: humanRedeableAmout(availableUniLPShares),
-  //     earned: humanRedeableAmout(earned),
-  //   })
-  //
-  //   setStakePoolInfo({
-  //     ...stakePoolInfo,
-  //     periodFinish: new Date((await src.periodFinish()) * 1000).toISOString(),
-  //     totalSupply: humanRedeableAmout(await src.totalSupply()),
-  //     rewardRate: humanRedeableAmout(await src.rewardRate()),
-  //     rewardPerToken: humanRedeableAmout(await src.rewardPerToken()),
-  //     APR: _APR.toString(),
-  //   })
-  //
-  //   setContracts({
-  //     stackingRewardsContract: src,
-  //     tokenPoolContract: tpc,
-  //     stakingPoolToken: spt,
-  //   })
-  //
-  //   setCardStatus({
-  //     ...cardStatus,
-  //     tick: true,
-  //   })
-  //
-  //   setTimeout(hideBlockTick, 300)
-  // }
-  //
-  // function hideBlockTick() {
-  //   setCardStatus({
-  //     ...cardStatus,
-  //     tick: false,
-  //   })
-  // }
-
   return (
     <PoolCardSection>
       {poolState == 'default' && (
@@ -207,6 +23,7 @@ function PoolCard({ provider, name, poolAddress, owner, logo }) {
           logo={logo}
           stakePoolInfo={stakePoolInfo}
           manage={() => setPoolState('manage')}
+          deposit={() => setPoolState('deposit')}
         />
       )}
       {poolState == 'manage' && (
@@ -265,6 +82,14 @@ const PoolCardSection = styled.section`
       font-weight: 600;
     }
   }
+  p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #353a41;
+  }
 `
 
 const Button = styled.a`
@@ -282,36 +107,95 @@ const Button = styled.a`
   text-align: center;
   padding: 11px;
   margin: 6px 0px;
+  cursor: pointer;
 `
 
-const Principal = ({ name, stakePoolInfo, manage, logo }) => (
+const SimpleButton = styled.button`
+  font-family: 'Inter-Bold';
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #2fbcb2;
+  background: transparent;
+  border: solid 0px transparent;
+`
+
+const SpaceBetween = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`
+
+const CenterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 100%;
+  width: 100%;
+`
+
+const Input = styled.input`
+  height: 48px;
+  padding-left: 10px;
+  background: #f4f5f6;
+  border-radius: 8px;
+  height: 48px;
+  color: #818b98;
+  font-family: 'Inter';
+  border: solid 0px transparent;
+  font-size: 14px;
+  line-height: 16px;
+  margin: 16px 0;
+  width: calc(100% - 12px);
+`
+
+const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
   <>
     <label>Balancer</label>
     <h1>
       <img src={logo} /> {name}
     </h1>
-    <h4>50% DN 50% ETH</h4>
+    <SpaceBetween>
+      <h2>50% DN 50% ETH</h2>{' '}
+      <SimpleButton onClick={deposit}>Add more</SimpleButton>
+    </SpaceBetween>
     <h2>
       <b>APR:</b>{' '}
       {stakePoolInfo.APR && (
         <div className="pool-info-text">{stakePoolInfo.APR}%</div>
       )}
     </h2>
-    <button onClick={manage}>Manage</button>
+    <SpaceBetween>
+      <h2>
+        <b>LP token:</b>{' '}
+        {stakePoolInfo.APR && (
+          <div className="pool-info-text">{stakePoolInfo.APR}%</div>
+        )}
+      </h2>
+      <SimpleButton onClick={manage}>Manage</SimpleButton>
+    </SpaceBetween>
     <div>
       <Button>Provide liquidity</Button>
-      <Button>Stake LP token</Button>
+      <Button onClick={deposit}>Stake LP token</Button>
     </div>
   </>
 )
 
 const Manage = ({ deposit }) => (
-  <>
-    <h1>Manage your LP tokens</h1>
-    <p>You currently have 56 staked Liquidity Provider tokens</p>
-    <Button onClick={deposit}>Deposit LP tokens</Button>
-    <Button>Withdraw LP tokens</Button>
-  </>
+  <CenterContainer>
+    <div>
+      <h2>
+        <b>Manage yourr LP tokens</b>
+      </h2>
+      <p>You currently have 56 staked Liquidity Provider tokens</p>
+      <Button onClick={deposit}>Deposit LP tokens</Button>
+      <Button>Withdraw LP tokens</Button>
+    </div>
+  </CenterContainer>
 )
 
 const Deposit = () => (
@@ -321,7 +205,7 @@ const Deposit = () => (
       You currently have 56 staked Liquidity Provider tokens. Deposit more to
       accrue more
     </p>
-    <input type="number" placeholder="Amount" />
+    <Input type="number" placeholder="Amount" />
     <Button>Deposit LP tokens</Button>
   </>
 )
