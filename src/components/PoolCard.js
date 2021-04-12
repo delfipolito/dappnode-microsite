@@ -28,10 +28,9 @@ function PoolCard({ provider, name, poolAddress, owner, logo }) {
         />
       )}
       {poolState == 'manage' && (
-        <Manage deposit={() => setPoolState('deposit')} />
+        <Manage deposit={() => setPoolState('deposit')} close={() => setPoolState('default')}/>
       )}
-      {poolState == 'deposit' && <Deposit />}
-      <button onClick={() => setPoolState('default')}>x</button>
+      {poolState == 'deposit' && <Deposit close={() => setPoolState('default')}/>}
     </PoolCardSection>
   )
 }
@@ -40,14 +39,13 @@ const PoolCardSection = styled.section`
   background-color: white;
   height: 100%;
   width: 100%;
-  max-height: 358px;
+  min-height: 376px;
   max-width: 261px;
   padding: 16px;
   box-shadow: 0px 2px 2px rgba(8, 43, 41, 0.04),
     0px 2px 8px rgba(8, 43, 41, 0.06);
   border-radius: 16px;
   flex-grow: 1;
-  min-height: 514px;
   margin: 0 10px;
   h1 {
     font-family: 'Inter';
@@ -58,6 +56,7 @@ const PoolCardSection = styled.section`
     color: #22262a;
     display: flex;
     align-items: center;
+    margin: 0 10px 0 0px !important;
     img {
       margin-left: -16px;
     }
@@ -79,6 +78,7 @@ const PoolCardSection = styled.section`
     font-size: 16px;
     line-height: 20px;
     color: #353a41;
+    margin-bottom: 0;
     b {
       font-weight: 600;
     }
@@ -154,6 +154,25 @@ const Input = styled.input`
   width: calc(100% - 12px);
 `
 
+const Earned = styled.h6`
+  font-family: 'Inter-Bold';
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 32px;
+  color: #222a29;
+  margin: 0;
+      display: inline;
+`
+
+const Token = styled.h6`
+  font-family: 'Inter';
+  font-size: 16px;
+  line-height: 25px;
+    display: inline;
+  color: #455453;
+  margin: 0 0 0  5px;
+`
+
 const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
   <>
     <label>Balancer</label>
@@ -165,13 +184,13 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
       <SimpleButton onClick={deposit}>Add more</SimpleButton>
     </SpaceBetween>
     <SpaceBetween>
-    <h2>
-      <b>APR:</b>{' '}
-      {stakePoolInfo.APR && (
-        <span className="pool-info-text">{stakePoolInfo.APR}%</span>
-      )}
-    </h2>
-    <APRDetails />
+      <h2>
+        <b>APR:</b>{' '}
+        {stakePoolInfo.APR && (
+          <div className="pool-info-text">{stakePoolInfo.APR}%</div>
+        )}
+      </h2>
+      <APRDetails />
     </SpaceBetween>
     <SpaceBetween>
       <h2>
@@ -182,6 +201,13 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
       </h2>
       <SimpleButton onClick={manage}>Manage</SimpleButton>
     </SpaceBetween>
+    <h2>
+      <b>Earned:</b>{' '}
+      <div className="pool-info-text">
+        <Earned>0</Earned>
+        <Token>DN</Token>
+      </div>
+    </h2>
     <div>
       <Button>Provide liquidity</Button>
       <Button onClick={deposit}>Stake LP token</Button>
@@ -189,9 +215,10 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
   </>
 )
 
-const Manage = ({ deposit }) => (
+const Manage = ({ deposit, close }) => (
   <CenterContainer>
     <div>
+    <SimpleButton onClick={close}>x</SimpleButton>
       <h2>
         <b>Manage yourr LP tokens</b>
       </h2>
@@ -202,8 +229,9 @@ const Manage = ({ deposit }) => (
   </CenterContainer>
 )
 
-const Deposit = () => (
+const Deposit = ({close}) => (
   <>
+    <SimpleButton onClick={close}>x</SimpleButton>
     <h1>Deposit LP tokens</h1>
     <p>
       You currently have 56 staked Liquidity Provider tokens. Deposit more to

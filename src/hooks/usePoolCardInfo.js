@@ -4,7 +4,8 @@ import { abi as STAKING_REWARDS_ABI } from '../artifacts/UnipoolVested.json'
 import { abi as UNI_ABI } from '../artifacts/UNI.json'
 import { humanRedeableAmout } from '../lib/web3-utils'
 import { useOnboardAndNotify } from './useOnboardAndNotify'
-import { bn } from '../lib/numbers'
+import { bn, ZERO, ONE } from '../lib/numbers'
+import { YEAR } from '../lib/time'
 
 export function usePoolCardInfo(name, poolAddress) {
   const { provider, address } = useOnboardAndNotify()
@@ -24,12 +25,33 @@ export function usePoolCardInfo(name, poolAddress) {
   const [poolInfo, setPoolInfo] = useState({
     'CAR/xDAI': { stakePoolInfo: null, userStakeInfo: null },
     'CAR/HNY': { stakePoolInfo: null, userStakeInfo: null },
-    CAR: { stakePoolInfo: null, userStakeInfo: null },
+    'CAR': { stakePoolInfo: null, userStakeInfo: null },
   })
-  console.log('hoook', name)
+
+  const [newContracts, setNewContracts] = useState({
+    'CAR/xDAI': {},
+    'CAR/HNY': {},
+    'CAR': {},
+  })
+
+
+  useEffect(
+    () => {
+      if (provider && owner && poolAddress) {
+        if (poolInfo[name].stakePoolInfo === null) {
+          console.log("delfi",name)
+          intialize()
+        } else {
+          updateStatus()
+        }
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      //}, [block]);
+    },
+    [name, poolAddress, owner, provider]
+  )
 
   async function updateStatus() {
-    console.log('update', name)
     if (
       !contracts.stackingRewardsContract ||
       !contracts.stackingRewardsContract ||
@@ -45,8 +67,8 @@ export function usePoolCardInfo(name, poolAddress) {
     let _rewardRate = await contracts.stackingRewardsContract.rewardRate()
     let _totalSupply = await contracts.stackingRewardsContract.totalSupply()
 
-    let _APR = new ethers.utils.BigNumber('0')
-    let _LP_CAR = new ethers.utils.BigNumber('0')
+    let _APR = ZERO
+    let _LP_CAR = ZERO
 
     if (_totalSupply > 0 && name !== 'CAR') {
       let _totalSupplyPool = await contracts.tokenPoolContract.totalSupply()
@@ -61,20 +83,20 @@ export function usePoolCardInfo(name, poolAddress) {
 
       let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
       _LP_CAR = _totalSupplyPool
-        .mul(new ethers.utils.BigNumber('1000000000000000000'))
-        .div(new ethers.utils.BigNumber(2))
+        .mul(ONE)
+        .div(bn(2))
         .div(_reserve)
 
       _APR = _rewardRate
-        .mul(new ethers.utils.BigNumber('31536000'))
-        .mul(new ethers.utils.BigNumber('100'))
+        .mul(YEAR)
+        .mul(bn('100'))
         .div(_totalSupply)
         .mul(_LP_CAR)
-        .div(new ethers.utils.BigNumber('1000000000000000000'))
+        .div(ONE)
     } else if (name === 'CAR') {
       _APR = _rewardRate
-        .mul(new ethers.utils.BigNumber('100'))
-        .mul(new ethers.utils.BigNumber('31536000'))
+        .mul(bn('100'))
+        .mul(YEAR)
         .div(_totalSupply)
     }
 
@@ -105,27 +127,9 @@ export function usePoolCardInfo(name, poolAddress) {
     setTimeout(hideBlockTick, 300)
   }
 
-  useEffect(
-    () => {
-      console.log('effect', name)
-      if (provider && owner && poolAddress) {
-        if (poolInfo[name].stakePoolInfo === null) {
-          intialize()
-        } else {
-          updateStatus()
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      //}, [block]);
-    },
-    [name, poolAddress, owner, provider]
-  )
-
   async function intialize() {
-    console.log('initialize', name)
     let info = poolInfo
     if (poolAddress && provider && owner) {
-      console.log('delf', poolAddress, provider, owner)
       let src = new Contract(poolAddress, STAKING_REWARDS_ABI, provider)
       let spt = await src.uni()
       let tpc = new Contract(spt, UNI_ABI, provider)
@@ -135,9 +139,9 @@ export function usePoolCardInfo(name, poolAddress) {
       let availableUniLPShares = await tpc.balanceOf(owner)
       let _rewardRate = await src.rewardRate()
       let _totalSupply = await src.totalSupply()
-      console.log('info', name, availableUniLPShares, _rewardRate, _totalSupply)
-      let _APR = new ethers.utils.BigNumber('0')
-      let _LP_CAR = new ethers.utils.BigNumber('0')
+
+      let _APR = ZERO
+      let _LP_CAR = ZERO
 
       if (_totalSupply > 0 && name !== 'CAR') {
         let _totalSupplyPool = await tpc.totalSupply()
@@ -149,23 +153,23 @@ export function usePoolCardInfo(name, poolAddress) {
 
         let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
         _LP_CAR = _totalSupplyPool
-          .mul(new ethers.utils.BigNumber('1000000000000000000'))
-          .div(new ethers.utils.BigNumber(2))
+          .mul(ONE)
+          .div(bn(2))
           .div(_reserve)
 
         _APR = _rewardRate
-          .mul(new ethers.utils.BigNumber('31536000'))
-          .mul(new ethers.utils.BigNumber('100'))
+          .mul(YEAR)
+          .mul(bn('100'))
           .div(_totalSupply)
           .mul(_LP_CAR)
-          .div(new ethers.utils.BigNumber('1000000000000000000'))
+          .div(ONE)
       } else if (name === 'CAR') {
         _APR = _rewardRate
-          .mul(new ethers.utils.BigNumber('100'))
-          .mul(new ethers.utils.BigNumber('31536000'))
+          .mul(bn('100'))
+          .mul(YEAR)
           .div(_totalSupply)
       }
-      console.log("apr",_APR)
+
       setUserStakeInfo({
         staked: humanRedeableAmout(uniLPShares),
         available: humanRedeableAmout(availableUniLPShares),
