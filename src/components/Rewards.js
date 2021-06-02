@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { networkAllowed, isMainnet, isDN } from '../lib/web3-utils'
 import Seed from '../assets/seed.js'
 import Time from '../assets/time.js'
+import { BigCurrency, GreenButton } from './Styles.js'
 
 function Rewards({ wallet, network, onboard }) {
   console.log("asset", wallet)
@@ -55,10 +56,10 @@ function Rewards({ wallet, network, onboard }) {
                 strokeColor={isMainnet(network) ? '#0D91F0' : '#819896'}
               />
               <div>
-                <Currency>
+                <BigCurrency>
                   <h1>900</h1>
                   <h2>DN</h2>
-                </Currency>
+                </BigCurrency>
                 <div>
                   <h3>Claimable</h3>
                 </div>
@@ -75,10 +76,10 @@ function Rewards({ wallet, network, onboard }) {
                 strokeColor={isMainnet(network) ? '#0D91F0' : '#819896'}
               />
               <div>
-                <Currency>
+                <BigCurrency>
                   <h1>10</h1>
                   <h2>DN</h2>
-                </Currency>
+                </BigCurrency>
                 <div>
                   <h3>Locked</h3>
                 </div>
@@ -106,10 +107,10 @@ function Rewards({ wallet, network, onboard }) {
                 strokeColor={isDN(network) ? '#248F8B' : '#819896'}
               />
               <div>
-                <Currency>
+                <BigCurrency>
                   <h1>900</h1>
                   <h2>DN</h2>
-                </Currency>
+                </BigCurrency>
                 <div>
                   <h3>Claimable</h3>
                 </div>
@@ -128,10 +129,10 @@ function Rewards({ wallet, network, onboard }) {
               />
 
               <div>
-                <Currency>
+                <BigCurrency>
                   <h1>10</h1>
                   <h2>DN</h2>
-                </Currency>
+                </BigCurrency>
                 <div>
                   <h3>Locked</h3>
                 </div>
@@ -145,33 +146,6 @@ function Rewards({ wallet, network, onboard }) {
     </>
   )
 }
-
-const GreenButton = styled.button`
-  background: ${props =>
-    props.disabled
-      ? '#DDE3E3'
-      : 'linear-gradient(99.61deg, #86e4dd -0.13%, #2fbcb2 99.3%)'};
-
-  border: solid 0px transparent;
-  border-radius: 27px;
-  font-family: 'Inter-Bold';
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 16px;
-  text-align: center;
-  color: white;
-  padding: 8px 16px;
-  box-shadow: 0px 1px 1px rgba(8, 43, 41, 0.08),
-    0px 0px 8px rgba(8, 43, 41, 0.06);
-  &:hover {
-    background: ${props =>
-      props.disabled
-        ? '#DDE3E3'
-        : 'linear-gradient(99.61deg, #76ccc5 -0.13%, #218c84 99.3%)'};
-
-    transition: all 0.25s ease-in-out;
-  }
-`
 
 const BlueButton = styled.button`
   background: ${props =>
@@ -197,29 +171,6 @@ const BlueButton = styled.button`
         : 'linear-gradient(99.61deg, #7cadd0 -0.13%, #075c98 99.3%);'};
 
     transition: all 0.25s ease-in-out;
-  }
-`
-
-const Currency = styled.div`
-  display: flex;
-  align-items: flex-end;
-  h1 {
-    font-family: 'Inter-Bold';
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 29px;
-    margin: 0 5px 0 0 !important;
-    color: #222a29;
-  }
-  h2 {
-    font-family: 'Inter-Bold';
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    align-items: flex-end;
-    color: #455453;
-    margin: 0;
-    display: inline-flex;
   }
 `
 

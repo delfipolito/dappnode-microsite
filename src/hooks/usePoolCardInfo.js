@@ -7,220 +7,146 @@ import { useOnboardAndNotify } from './useOnboardAndNotify'
 import { bn, ZERO, ONE } from '../lib/numbers'
 import { YEAR } from '../lib/time'
 
-export function usePoolCardInfo(name, poolAddress) {
+export function usePoolCardInfo() {
   const { provider, address } = useOnboardAndNotify()
   let owner = address
-  const [cardStatus, setCardStatus] = useState({
-    tick: false,
-    amount: '0',
-    depositButton: 'Deposit',
-    withdrawButton: 'Withdraw',
-    claimButton: 'Claim',
-    buttonsEnable: true,
+
+  const poolAddress = {
+    'CAR/xDAI': "0x561807cd1f2d32f7ef7dadb1515a55d35eba207c",
+    'CAR/HNY': "0xb755a9614bfd5eb812b9cc3d00166565f2e72b41",
+    CAR: "0xf43913aF72af30d6b34782D08C4De3F6a14Ce42e",
+  }
+
+  const [contracts, setContracts] = useState({
+    'CAR/xDAI': {},
+    'CAR/HNY': {},
+    CAR: {},
   })
-  const [stakePoolInfo, setStakePoolInfo] = useState({})
-  const [contracts, setContracts] = useState({})
-  const [userStakeInfo, setUserStakeInfo] = useState({})
 
   const [poolInfo, setPoolInfo] = useState({
     'CAR/xDAI': { stakePoolInfo: null, userStakeInfo: null },
     'CAR/HNY': { stakePoolInfo: null, userStakeInfo: null },
-    'CAR': { stakePoolInfo: null, userStakeInfo: null },
+    CAR: { stakePoolInfo: null, userStakeInfo: null },
   })
-
-  const [newContracts, setNewContracts] = useState({
-    'CAR/xDAI': {},
-    'CAR/HNY': {},
-    'CAR': {},
-  })
-
 
   useEffect(
     () => {
-      if (provider && owner && poolAddress) {
-        if (poolInfo[name].stakePoolInfo === null) {
-          console.log("delfi",name)
-          intialize()
-        } else {
-          updateStatus()
-        }
+      if (provider && owner) {
+        intialize('CAR/xDAI')
+        intialize('CAR/HNY')
+        intialize('CAR')
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      //}, [block]);
     },
-    [name, poolAddress, owner, provider]
+    [owner, provider]
   )
 
-  async function updateStatus() {
-    if (
-      !contracts.stackingRewardsContract ||
-      !contracts.stackingRewardsContract ||
-      !contracts.tokenPoolContract
-    )
-      return
+  async function getPoolDetail(src, tpc, owner) {
+    let uniLPShares = await src.balanceOf(owner)
+    let earned = await src.earned(owner)
+    let availableUniLPShares = await tpc.balanceOf(owner)
+    let _rewardRate = await src.rewardRate()
+    let _totalSupply = await src.totalSupply()
 
-    let uniLPShares = await contracts.stackingRewardsContract.balanceOf(owner)
-    let earned = await contracts.stackingRewardsContract.earned(owner)
-    let availableUniLPShares = await contracts.tokenPoolContract.balanceOf(
-      owner
-    )
-    let _rewardRate = await contracts.stackingRewardsContract.rewardRate()
-    let _totalSupply = await contracts.stackingRewardsContract.totalSupply()
+    return {
+      uniLPShares: uniLPShares,
+      earned: earned,
+      availableUniLPShares: availableUniLPShares,
+      _rewardRate: _rewardRate,
+      _totalSupply: _totalSupply,
+    }
+  }
 
-    let _APR = ZERO
-    let _LP_CAR = ZERO
+  async function getLpCAR(tpc, provider) {
+    let _totalSupplyPool = await tpc.totalSupply()
+    let [_reserve0, _reserve1] = await tpc.getReserves()
 
-    if (_totalSupply > 0 && name !== 'CAR') {
-      let _totalSupplyPool = await contracts.tokenPoolContract.totalSupply()
-      let [
-        _reserve0,
-        _reserve1,
-      ] = await contracts.tokenPoolContract.getReserves()
+    let _token0 = await tpc.token0()
+    let tkn0 = new Contract(_token0, UNI_ABI, provider)
+    let _tokenName0 = await tkn0.symbol()
 
-      let _token0 = await contracts.tokenPoolContract.token0()
-      let tkn0 = new Contract(_token0, UNI_ABI, provider)
-      let _tokenName0 = await tkn0.symbol()
+    let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
+    return _totalSupplyPool
+      .mul(ONE)
+      .div(bn(2))
+      .div(_reserve)
+  }
 
-      let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
-      _LP_CAR = _totalSupplyPool
-        .mul(ONE)
-        .div(bn(2))
-        .div(_reserve)
-
-      _APR = _rewardRate
-        .mul(YEAR)
-        .mul(bn('100'))
-        .div(_totalSupply)
-        .mul(_LP_CAR)
-        .div(ONE)
-    } else if (name === 'CAR') {
-      _APR = _rewardRate
+  function getApr(name, _totalSupply, _rewardRate, _LP_CAR) {
+    if (name === 'CAR') {
+      return _rewardRate
         .mul(bn('100'))
         .mul(YEAR)
         .div(_totalSupply)
     }
 
-    setStakePoolInfo({
-      ...stakePoolInfo,
-      periodFinish: new Date(
-        (await contracts.stackingRewardsContract.periodFinish()) * 1000
-      ).toISOString(),
-      totalSupply: humanRedeableAmout(_totalSupply),
-      rewardRate: humanRedeableAmout(_rewardRate),
-      rewardPerToken: humanRedeableAmout(
-        await contracts.stackingRewardsContract.rewardPerToken()
-      ),
-      APR: _APR.toString(),
-    })
-
-    setUserStakeInfo({
-      staked: humanRedeableAmout(uniLPShares),
-      available: humanRedeableAmout(availableUniLPShares),
-      earned: humanRedeableAmout(earned),
-    })
-
-    setCardStatus({
-      ...cardStatus,
-      tick: true,
-    })
-
-    setTimeout(hideBlockTick, 300)
+    return _rewardRate
+      .mul(YEAR)
+      .mul(bn('100'))
+      .div(_totalSupply)
+      .mul(_LP_CAR)
+      .div(ONE)
   }
 
-  async function intialize() {
-    let info = poolInfo
-    if (poolAddress && provider && owner) {
-      let src = new Contract(poolAddress, STAKING_REWARDS_ABI, provider)
-      let spt = await src.uni()
-      let tpc = new Contract(spt, UNI_ABI, provider)
+  async function intialize(name) {
+    if (poolAddress[name] && provider && owner) {
+      await getContracts(poolAddress[name], provider, name)
 
-      let uniLPShares = await src.balanceOf(owner)
-      let earned = await src.earned(owner)
-      let availableUniLPShares = await tpc.balanceOf(owner)
-      let _rewardRate = await src.rewardRate()
-      let _totalSupply = await src.totalSupply()
+      const src = contracts[name].stackingRewardsContract
+      const tpc = contracts[name].tokenPoolContract
+      const spt = contracts[name].stakingPoolToken
+
+      let poolDetail = await getPoolDetail(src, tpc, owner)
 
       let _APR = ZERO
       let _LP_CAR = ZERO
 
-      if (_totalSupply > 0 && name !== 'CAR') {
-        let _totalSupplyPool = await tpc.totalSupply()
-        let [_reserve0, _reserve1] = await tpc.getReserves()
-
-        let _token0 = await tpc.token0()
-        let tkn0 = new Contract(_token0, UNI_ABI, provider)
-        let _tokenName0 = await tkn0.symbol()
-
-        let _reserve = _tokenName0 === 'CAR' ? _reserve0 : _reserve1
-        _LP_CAR = _totalSupplyPool
-          .mul(ONE)
-          .div(bn(2))
-          .div(_reserve)
-
-        _APR = _rewardRate
-          .mul(YEAR)
-          .mul(bn('100'))
-          .div(_totalSupply)
-          .mul(_LP_CAR)
-          .div(ONE)
-      } else if (name === 'CAR') {
-        _APR = _rewardRate
-          .mul(bn('100'))
-          .mul(YEAR)
-          .div(_totalSupply)
+      if (poolDetail._totalSupply > 0 && name !== 'CAR') {
+        _LP_CAR = await getLpCAR(tpc, provider)
       }
 
-      setUserStakeInfo({
-        staked: humanRedeableAmout(uniLPShares),
-        available: humanRedeableAmout(availableUniLPShares),
-        earned: humanRedeableAmout(earned),
-      })
+      _APR = getApr(
+        name,
+        poolDetail._totalSupply,
+        poolDetail._rewardRate,
+        _LP_CAR
+      )
 
-      setStakePoolInfo({
-        ...stakePoolInfo,
-        periodFinish: new Date((await src.periodFinish()) * 1000).toISOString(),
-        totalSupply: humanRedeableAmout(await src.totalSupply()),
-        rewardRate: humanRedeableAmout(await src.rewardRate()),
-        rewardPerToken: humanRedeableAmout(await src.rewardPerToken()),
-        APR: _APR.toString(),
-      })
+      let info = poolInfo
+      info[name].userStakeInfo = {
+        staked: humanRedeableAmout(poolDetail.uniLPShares),
+        available: humanRedeableAmout(poolDetail.availableUniLPShares),
+        earned: humanRedeableAmout(poolDetail.earned),
+      }
 
       info[name].stakePoolInfo = {
         periodFinish: new Date((await src.periodFinish()) * 1000).toISOString(),
-        totalSupply: humanRedeableAmout(await src.totalSupply()),
-        rewardRate: humanRedeableAmout(await src.rewardRate()),
+        totalSupply: humanRedeableAmout(poolDetail._totalSupply),
+        rewardRate: humanRedeableAmout(poolDetail._rewardRate),
         rewardPerToken: humanRedeableAmout(await src.rewardPerToken()),
         APR: _APR.toString(),
       }
 
       setPoolInfo(info)
-
-      setContracts({
-        stackingRewardsContract: src,
-        tokenPoolContract: tpc,
-        stakingPoolToken: spt,
-      })
-
-      setCardStatus({
-        ...cardStatus,
-        tick: true,
-      })
-
-      setTimeout(hideBlockTick, 300)
     }
   }
 
-  function hideBlockTick() {
-    setCardStatus({
-      ...cardStatus,
-      tick: false,
-    })
+  async function getContracts(poolAddress, provider, name) {
+    let src = new Contract(poolAddress, STAKING_REWARDS_ABI, provider)
+    let spt = await src.uni()
+    let tpc = new Contract(spt, UNI_ABI, provider)
+
+    let updateContracts = contracts
+    updateContracts[name] = {
+      stackingRewardsContract: src,
+      tokenPoolContract: tpc,
+      stakingPoolToken: spt,
+    }
+
+    setContracts(updateContracts)
   }
 
   return {
-    cardStatus,
-    stakePoolInfo,
+    poolInfo,
     contracts,
-    userStakeInfo,
   }
 }

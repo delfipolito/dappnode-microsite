@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Component, useState } from 'react'
 import styled from 'styled-components'
 import Navbar from './components/Navbar'
 import Dashboard from './components/Dashboard'
+import Sidebar from './components/SideBar'
 import './App.css'
 import { useOnboardAndNotify } from './hooks/useOnboardAndNotify'
 
@@ -16,23 +17,37 @@ function App() {
     provider,
   } = useOnboardAndNotify()
 
+  const [isOpen, setIsOpen] = useState(false)
+
   return onboard && notify ? (
-    <Main>
-      <Navbar
+    <div id="outer-container" style={{ height: '100%' }}>
+      <Sidebar
         wallet={wallet}
         onboard={onboard}
         address={address}
         ethBalance={balance}
         network={network}
+        isOpen={isOpen}
+        closeSidebar= {() => setIsOpen(false)}
       />
-      <Dashboard
-        wallet={wallet}
-        provider={provider}
-        address={address}
-        onboard={onboard}
-        network={network}
-      />
-    </Main>
+      <Main id="page-wrap">
+        <Navbar
+          wallet={wallet}
+          onboard={onboard}
+          address={address}
+          ethBalance={balance}
+          network={network}
+          openSidebar={() => setIsOpen(true)}
+        />
+        <Dashboard
+          wallet={wallet}
+          provider={provider}
+          address={address}
+          onboard={onboard}
+          network={network}
+        />
+      </Main>
+    </div>
   ) : (
     <div>Loading...</div>
   )

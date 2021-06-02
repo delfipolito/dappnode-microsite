@@ -3,6 +3,8 @@ import Popup from 'reactjs-popup'
 import styled from 'styled-components'
 import 'reactjs-popup/dist/index.css'
 import closeModal from '../assets/closeModal.svg'
+import external from '../assets/external-link-green.svg'
+import { WhiteGreenButtonLink } from './Styles.js'
 
 export default () => (
   <StyledPopup trigger={<SimpleButton>See details</SimpleButton>} modal>
@@ -36,7 +38,7 @@ export default () => (
           </div>
         </div>
         <div className="actions">
-          <Button>Get more DN</Button>
+          <WhiteGreenButtonLink>Get more DN <img src={external}/></WhiteGreenButtonLink>
         </div>
       </div>
     )}
@@ -86,23 +88,6 @@ const SimpleButton = styled.button`
   border: solid 0px transparent;
 `
 
-const Button = styled.a`
-  color: #2fbcb2;
-  background: transparent;
-  border: solid 1px #2fbcb2;
-  font-family: 'Interstate', sans-serif;
-  border-radius: 38px;
-  padding: 25px 100px;
-  display: inline-block;
-  width: -webkit-fill-available;
-  font-size: 16px;
-  letter-spacing: 0.27px;
-  line-height: 19px;
-  text-align: center;
-  padding: 11px;
-  margin: 6px 0px;
-  cursor: pointer;
-`
 const SpaceBetween = styled.div`
   display: flex;
   align-items: center;

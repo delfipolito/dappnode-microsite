@@ -6,15 +6,21 @@ import { abi as UNI_ABI } from '../artifacts/UNI.json'
 import { humanRedeableAmout } from '../lib/web3-utils'
 import { usePoolCardInfo } from '../hooks/usePoolCardInfo'
 import APRDetails from './APRDetails'
+import { Input } from './Styles.js'
+import {
+  Token,
+  Earned,
+  CenterContainer,
+  SpaceBetween,
+  SimpleButton,
+  Button,
+  PoolCardSection,
+} from './PoolCardStyle.js'
 
 function PoolCard({ provider, name, poolAddress, owner, logo }) {
   const [poolState, setPoolState] = useState('default')
-  const {
-    cardStatus,
-    stakePoolInfo,
-    contracts,
-    userStakeInfo,
-  } = usePoolCardInfo(name, poolAddress, owner, provider)
+
+  const { poolInfo, contracts } = usePoolCardInfo()
 
   return (
     <PoolCardSection>
@@ -22,156 +28,23 @@ function PoolCard({ provider, name, poolAddress, owner, logo }) {
         <Principal
           name={name}
           logo={logo}
-          stakePoolInfo={stakePoolInfo}
+          stakePoolInfo={poolInfo[name].stakePoolInfo}
           manage={() => setPoolState('manage')}
           deposit={() => setPoolState('deposit')}
         />
       )}
       {poolState == 'manage' && (
-        <Manage deposit={() => setPoolState('deposit')} close={() => setPoolState('default')}/>
+        <Manage
+          deposit={() => setPoolState('deposit')}
+          close={() => setPoolState('default')}
+        />
       )}
-      {poolState == 'deposit' && <Deposit close={() => setPoolState('default')}/>}
+      {poolState == 'deposit' && (
+        <Deposit close={() => setPoolState('default')} />
+      )}
     </PoolCardSection>
   )
 }
-
-const PoolCardSection = styled.section`
-  background-color: white;
-  height: 100%;
-  width: 100%;
-  min-height: 376px;
-  max-width: 261px;
-  padding: 16px;
-  box-shadow: 0px 2px 2px rgba(8, 43, 41, 0.04),
-    0px 2px 8px rgba(8, 43, 41, 0.06);
-  border-radius: 16px;
-  flex-grow: 1;
-  margin: 0 10px;
-  h1 {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 34px;
-    color: #22262a;
-    display: flex;
-    align-items: center;
-    margin: 0 10px 0 0px !important;
-    img {
-      margin-left: -16px;
-    }
-  }
-  label {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 8px;
-    line-height: 10px;
-    letter-spacing: 0.07em;
-    color: #454b54;
-    text-transform: uppercase;
-  }
-  h2 {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    color: #353a41;
-    margin-bottom: 0;
-    b {
-      font-weight: 600;
-    }
-  }
-  p {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-    color: #353a41;
-  }
-`
-
-const Button = styled.a`
-  color: #2fbcb2;
-  background: transparent;
-  border: solid 1px #2fbcb2;
-  font-family: 'Interstate', sans-serif;
-  border-radius: 38px;
-  padding: 25px 100px;
-  display: inline-block;
-  width: -webkit-fill-available;
-  font-size: 16px;
-  letter-spacing: 0.27px;
-  line-height: 19px;
-  text-align: center;
-  padding: 11px;
-  margin: 6px 0px;
-  cursor: pointer;
-`
-
-const SimpleButton = styled.button`
-  font-family: 'Inter-Bold';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  color: #2fbcb2;
-  background: transparent;
-  border: solid 0px transparent;
-`
-
-const SpaceBetween = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`
-
-const CenterContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  height: 100%;
-  width: 100%;
-`
-
-const Input = styled.input`
-  height: 48px;
-  padding-left: 10px;
-  background: #f4f5f6;
-  border-radius: 8px;
-  height: 48px;
-  color: #818b98;
-  font-family: 'Inter';
-  border: solid 0px transparent;
-  font-size: 14px;
-  line-height: 16px;
-  margin: 16px 0;
-  width: calc(100% - 12px);
-`
-
-const Earned = styled.h6`
-  font-family: 'Inter-Bold';
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 32px;
-  color: #222a29;
-  margin: 0;
-      display: inline;
-`
-
-const Token = styled.h6`
-  font-family: 'Inter';
-  font-size: 16px;
-  line-height: 25px;
-    display: inline;
-  color: #455453;
-  margin: 0 0 0  5px;
-`
 
 const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
   <>
@@ -186,18 +59,20 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
     <SpaceBetween>
       <h2>
         <b>APR:</b>{' '}
-        {stakePoolInfo.APR && (
-          <div className="pool-info-text">{stakePoolInfo.APR}%</div>
-        )}
+        {stakePoolInfo &&
+          stakePoolInfo.APR && (
+            <div className="pool-info-text">{stakePoolInfo.APR}%</div>
+          )}
       </h2>
       <APRDetails />
     </SpaceBetween>
     <SpaceBetween>
       <h2>
         <b>LP token:</b>{' '}
-        {stakePoolInfo.APR && (
-          <div className="pool-info-text">{stakePoolInfo.APR}%</div>
-        )}
+        {stakePoolInfo &&
+          stakePoolInfo.APR && (
+            <div className="pool-info-text">{stakePoolInfo.APR}%</div>
+          )}
       </h2>
       <SimpleButton onClick={manage}>Manage</SimpleButton>
     </SpaceBetween>
@@ -218,7 +93,7 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
 const Manage = ({ deposit, close }) => (
   <CenterContainer>
     <div>
-    <SimpleButton onClick={close}>x</SimpleButton>
+      <SimpleButton onClick={close}>x</SimpleButton>
       <h2>
         <b>Manage yourr LP tokens</b>
       </h2>
@@ -229,7 +104,7 @@ const Manage = ({ deposit, close }) => (
   </CenterContainer>
 )
 
-const Deposit = ({close}) => (
+const Deposit = ({ close }) => (
   <>
     <SimpleButton onClick={close}>x</SimpleButton>
     <h1>Deposit LP tokens</h1>
