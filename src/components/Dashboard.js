@@ -6,7 +6,6 @@ import dn from '../assets/dn-logo.svg'
 import pools from '../assets/Pools.svg'
 import tokens from '../assets/Tokens.svg'
 import dnEth from '../assets/dn-eth-logos.svg'
-import { usePoolCardInfo } from '../hooks/usePoolCardInfo'
 import { networkAllowed } from '../lib/web3-utils'
 import { Inter700 } from './Styles.js'
 
@@ -14,7 +13,7 @@ function Dashboard({ provider, address, network, wallet, onboard }) {
   return (
     <DashboardSection>
       <Inter700>
-        <img src={tokens} />
+        <img alt="tokens" src={tokens} />
         My tokens
       </Inter700>
       <PoolsContainer>
@@ -22,7 +21,7 @@ function Dashboard({ provider, address, network, wallet, onboard }) {
       </PoolsContainer>
       <br />
       <Inter700>
-        <img src={pools} />
+        <img alt="pools" src={pools} />
         Staking Pools
       </Inter700>
       <PoolsContainer>

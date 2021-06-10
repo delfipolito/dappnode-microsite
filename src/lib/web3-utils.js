@@ -74,7 +74,7 @@ export function getNetworkType(chainId) {
 //TODO: Add DN network id
 export function networkAllowed(chainId) {
   chainId = String(chainId)
-  return (chainId === '100')
+  return (chainId === '100' || chainId === '1')
 }
 
 export function isMainnet(chainId) {

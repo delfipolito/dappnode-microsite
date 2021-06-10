@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { ethers } from 'ethers'
 import { initOnboard, initNotify } from '../services'
 

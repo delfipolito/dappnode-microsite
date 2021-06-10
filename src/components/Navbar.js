@@ -1,11 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 import logo from '../assets/mini-logo.svg'
-import { shortenAddress, getNetworkType } from '../lib/web3-utils'
 import { networkAllowed } from '../lib/web3-utils'
 import ConnectionInfo from './ConnectionInfo'
 
-const Navbar = ({ address, ethBalance, network, wallet, onboard, openSidebar }) => (
+const Navbar = ({
+  address,
+  ethBalance,
+  network,
+  wallet,
+  onboard,
+  openSidebar,
+}) => (
   <NavbarSection>
     {networkAllowed(network) && <ConnectedLine />}
     <Container>
@@ -41,8 +47,6 @@ const NavbarSection = styled.section`
   position: relative;
   z-index: 1;
 }
-
-
 `
 
 const Container = styled.div`

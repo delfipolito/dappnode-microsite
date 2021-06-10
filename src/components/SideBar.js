@@ -120,7 +120,7 @@ function Sidebar({
                 <Inter400>103.20</Inter400>
               </BalanceBox>
               <br/>
-              <WhiteGreenButtonLink>Get more DN <img src={external}/></WhiteGreenButtonLink>
+              <WhiteGreenButtonLink>Get more DN <img alt="link" src={external}/></WhiteGreenButtonLink>
             </div>
           </SidebarCard>
           <br />

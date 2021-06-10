@@ -13,6 +13,15 @@ export const Inter700 = styled.h1`
     padding-right: 5px;
   }
 `
+
+export const Inter600 = styled.p`
+  font-family: 'Inter-Bold';
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 17px;
+  color: #353a41;
+`
+
 export const Inter500 = styled.p`
   font-family: 'Inter-Medium';
   font-weight: 500;
@@ -73,6 +82,13 @@ export const Input = styled.input`
   width: calc(100% - 12px);
 `
 
+export const SpaceBetween = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`
+
 export const GreenButton = styled.button`
   background: ${props =>
     props.disabled
@@ -98,6 +114,9 @@ export const GreenButton = styled.button`
 
     transition: all 0.25s ease-in-out;
   }
+  &.long {
+    width: -webkit-fill-available;
+  }
 `
 
 export const WhiteGreenButtonLink = styled.a`
@@ -121,4 +140,41 @@ export const WhiteGreenButtonLink = styled.a`
   img {
     padding-left: 5px;
   }
+`
+
+export const SimpleButton = styled.button`
+  font-family: 'Inter-Bold';
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #2fbcb2;
+  background: transparent;
+  border: solid 0px transparent;
+`
+
+export const NavbarButton = styled.div`
+  background: white;
+  border-radius: 8px;
+  text-transform: uppercase;
+  border: 0px solid transparent;
+  padding: 8px 10px;
+  font-family: 'Inter-Bold', sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: right;
+  color: #455453;
+  margin-left: 15px;
+  cursor: pointer;
+  span {
+    color: #455453c7;
+    padding-left: 3px;
+  }
+`
+
+export const LightGreenButton = styled(NavbarButton)`
+  background: #c4f3ef;
+  color: #144b52;
 `

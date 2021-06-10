@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { ethers, Contract, BigNumber } from 'ethers'
-import { abi as STAKING_REWARDS_ABI } from '../artifacts/UnipoolVested.json'
-import { abi as UNI_ABI } from '../artifacts/UNI.json'
-import { humanRedeableAmout } from '../lib/web3-utils'
+import React, { useState } from 'react'
 import { usePoolCardInfo } from '../hooks/usePoolCardInfo'
+import closeImg from '../assets/closePool.svg'
 import APRDetails from './APRDetails'
-import { Input } from './Styles.js'
+import {
+  Input,
+  Inter600,
+  Inter400,
+  GreenButton,
+  SimpleButton,
+} from './Styles.js'
 import {
   Token,
   Earned,
-  CenterContainer,
   SpaceBetween,
-  SimpleButton,
   Button,
   PoolCardSection,
+  ClosePool,
 } from './PoolCardStyle.js'
 
 function PoolCard({ provider, name, poolAddress, owner, logo }) {
   const [poolState, setPoolState] = useState('default')
-
-  const { poolInfo, contracts } = usePoolCardInfo()
+  const { poolInfo } = usePoolCardInfo()
 
   return (
     <PoolCardSection>
-      {poolState == 'default' && (
+      {poolState === 'default' && (
         <Principal
           name={name}
           logo={logo}
@@ -33,24 +33,28 @@ function PoolCard({ provider, name, poolAddress, owner, logo }) {
           deposit={() => setPoolState('deposit')}
         />
       )}
-      {poolState == 'manage' && (
+      {poolState === 'manage' && (
         <Manage
           deposit={() => setPoolState('deposit')}
+          withdraw={() => setPoolState('withdraw')}
           close={() => setPoolState('default')}
         />
       )}
-      {poolState == 'deposit' && (
+      {poolState === 'deposit' && (
         <Deposit close={() => setPoolState('default')} />
+      )}
+      {poolState === 'withdraw' && (
+        <Withdraw close={() => setPoolState('default')} />
       )}
     </PoolCardSection>
   )
 }
 
 const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
-  <>
+  <div>
     <label>Balancer</label>
     <h1>
-      <img src={logo} /> {name}
+      <img alt="logo" src={logo} /> {name}
     </h1>
     <SpaceBetween>
       <h2>50% DN 50% ETH</h2>{' '}
@@ -87,33 +91,56 @@ const Principal = ({ name, stakePoolInfo, manage, deposit, logo }) => (
       <Button>Provide liquidity</Button>
       <Button onClick={deposit}>Stake LP token</Button>
     </div>
-  </>
+  </div>
 )
 
-const Manage = ({ deposit, close }) => (
-  <CenterContainer>
+const Manage = ({ deposit, withdraw, close }) => (
+  <>
+    <ClosePool onClick={close}>
+      <img alt="close" src={closeImg} />
+    </ClosePool>
     <div>
-      <SimpleButton onClick={close}>x</SimpleButton>
-      <h2>
-        <b>Manage yourr LP tokens</b>
-      </h2>
-      <p>You currently have 56 staked Liquidity Provider tokens</p>
+      <Inter600>Manage yourr LP tokens</Inter600>
+      <Inter400>
+        You currently have 56 staked Liquidity Provider tokens
+      </Inter400>
       <Button onClick={deposit}>Deposit LP tokens</Button>
-      <Button>Withdraw LP tokens</Button>
+      <Button onClick={withdraw}>Withdraw LP tokens</Button>
     </div>
-  </CenterContainer>
+  </>
 )
 
 const Deposit = ({ close }) => (
   <>
-    <SimpleButton onClick={close}>x</SimpleButton>
-    <h1>Deposit LP tokens</h1>
-    <p>
-      You currently have 56 staked Liquidity Provider tokens. Deposit more to
-      accrue more
-    </p>
-    <Input type="number" placeholder="Amount" />
-    <Button>Deposit LP tokens</Button>
+    <ClosePool onClick={close}>
+      <img alt="close" src={closeImg} />
+    </ClosePool>
+    <div>
+      <Inter600>Deposit LP tokens</Inter600>
+      <Inter400>
+        You currently have 56 staked Liquidity Provider tokens. Deposit more to
+        accrue more
+      </Inter400>
+      <Input type="number" placeholder="Amount" />
+      <GreenButton className="long">Deposit LP tokens</GreenButton>
+    </div>
+  </>
+)
+
+const Withdraw = ({ close }) => (
+  <>
+    <ClosePool onClick={close}>
+      <img alt="close" src={closeImg} />
+    </ClosePool>
+    <div>
+      <Inter600>Withdraw LP tokens</Inter600>
+      <Inter400>
+        You currently have 56 staked Liquidity Provider tokens. Enter the amount
+        you’d like to withdraw.
+      </Inter400>
+      <Input type="number" placeholder="Amount" />
+      <GreenButton className="long">Withdraw LP tokens</GreenButton>
+    </div>
   </>
 )
 

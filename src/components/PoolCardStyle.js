@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 
 export const PoolCardSection = styled.section`
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   height: 100%;
   width: 100%;
@@ -48,14 +52,6 @@ export const PoolCardSection = styled.section`
       font-weight: 600;
     }
   }
-  p {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-    color: #353a41;
-  }
 `
 
 export const Button = styled.a`
@@ -76,16 +72,14 @@ export const Button = styled.a`
   cursor: pointer;
 `
 
-export const SimpleButton = styled.button`
-  font-family: 'Inter-Bold';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 15px;
-  text-align: center;
-  color: #2fbcb2;
+export const ClosePool = styled.button`
   background: transparent;
   border: solid 0px transparent;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 0;
+  right: 0;
 `
 
 export const SpaceBetween = styled.div`
@@ -93,15 +87,6 @@ export const SpaceBetween = styled.div`
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-`
-
-export const CenterContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  height: 100%;
-  width: 100%;
 `
 
 export const Earned = styled.h6`
